@@ -1,0 +1,28 @@
+version: '3.9'
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    env_file:
+      - .env  # Ensure this file exists with necessary environment variables
+    environment:
+      - POSTGRES_USER=Budgy
+      - POSTGRES_PASSWORD=Budgy
+      - POSTGRES_DB=budgy_development
+    command: ["bash", "-c", "rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"]
+  db:
+    image: postgres:14.1
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=Budgy
+      - POSTGRES_PASSWORD=Budgy
+      - POSTGRES_DB=budgy_development
+
+volumes:
+  pgdata:
